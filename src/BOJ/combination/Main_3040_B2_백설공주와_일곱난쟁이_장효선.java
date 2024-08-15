@@ -1,11 +1,11 @@
-package com.ssafy.ws.combination;
+package BOJ.combination;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
-public class Main_B2_3040_백설공주와_일곱난쟁이_장효선 {
+public class Main_3040_B2_백설공주와_일곱난쟁이_장효선 {
 
 	static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 	static StringTokenizer st;
