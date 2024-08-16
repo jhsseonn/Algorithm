@@ -8,6 +8,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.StringTokenizer;
 
+/**
+ * 메모리: 14,112KB / 시간: 100ms
+ */
 public class Main_2961_S2_도영이가_만든_맛있는_음식_장효선 {
 	
 	static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -39,7 +42,9 @@ public class Main_2961_S2_도영이가_만든_맛있는_음식_장효선 {
 	
 	private static void getSubset(int depth, int len) {
 		if (depth==N) {
-			evaluate();
+			if (subsetSB.length!=0) {  // 재료 적어도 하나 이상 사용해야 하므로 공집합은 제외
+				evaluate(len);
+			}
 			return;
 		}
 		subsetSB[len][0] = inputSB[depth][0];
@@ -49,14 +54,10 @@ public class Main_2961_S2_도영이가_만든_맛있는_음식_장효선 {
 		getSubset(depth+1, len);
 	}
 	
-	private static void evaluate() {
+	private static void evaluate(int len) {
 		int sour = 1;
 		int bitter = 0;
-		if (subsetSB.length==0) {  // 재료 적어도 하나 이상 사용해야 하므로 공집합은 제외
-			return;
-		}
-		for (int i = 0; i < subsetSB.length; i++) {
-			if (subsetSB[i][0]==0 && subsetSB[i][1]==0) continue;
+		for (int i = 0; i < len; i++) {
 			sour*=subsetSB[i][0];
 			bitter+=subsetSB[i][1];
 		}
