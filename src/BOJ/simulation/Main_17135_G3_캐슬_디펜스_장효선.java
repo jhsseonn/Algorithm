@@ -4,22 +4,27 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.StringTokenizer;
 
 public class Main_17135_G3_캐슬_디펜스_장효선 {
 
     static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     static StringTokenizer st;
-    static StringBuilder sb = new StringBuilder();
     static int[][] castle;
+    static int[][] castleCopy;
     static int N;
     static int M;
     static int D;
     static int[] defences = new int[3];
     static List<int[]> defencesList = new ArrayList<>();
-    static List<int[]> enemies = new ArrayList<>();
-    static List<int[]> killEnemies;
+    static List<Enemy> enemies = new ArrayList<>();
     static int maxKilled = 0;
 
     public static void main(String[] args) throws IOException {
@@ -28,6 +33,7 @@ public class Main_17135_G3_캐슬_디펜스_장효선 {
         M = Integer.parseInt(st.nextToken());
         D = Integer.parseInt(st.nextToken());
         castle = new int[N + 1][M];
+        castleCopy = new int[N+1][M];
 
         for (int i = 0; i < N; i++) {
             st = new StringTokenizer(br.readLine());
@@ -38,15 +44,23 @@ public class Main_17135_G3_캐슬_디펜스_장효선 {
 
         // 궁수 배치
         getDefence(0, 0);
-        // 적의 위치 리스트로 받기 - 초기
-        getEnemies();
 
         for (int[] dArray : defencesList) {
+            // 게임 초기 데이터로 초기화
+            getData();
+            // 적의 위치 리스트로 받기 - 초기
+            getEnemies();
             // 공격
             maxKilled = Math.max(maxKilled, kill(dArray));
         }
 
         System.out.println(maxKilled);
+    }
+
+    private static void getData() {
+        for (int i = 0; i < N; i++) {
+            castleCopy[i] = castle[i].clone();
+        }
     }
 
     private static void getDefence(int depth, int start) {
@@ -63,80 +77,92 @@ public class Main_17135_G3_캐슬_디펜스_장효선 {
     private static void getEnemies() {
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < M; j++) {
-                if (castle[i][j] == 1) {
-                    enemies.add(new int[]{i, j});
+                if (castleCopy[i][j] == 1) {
+                    enemies.add(new Enemy(i, j));
                 }
             }
         }
     }
 
+    // 현재 선택된 궁수 조합으로 죽일 수 있는 최대 적의 수 반환
     private static int kill(int[] dArray) {
         int killed = 0;
-        for (int i = 0; i < M; i++) {
+
+        // 적이 모두 죽을 때까지 반복
+        while(enemies.size()>0) {
             // 라운드 재개 전 초기화
-            killEnemies = new ArrayList<>();
-            if (enemies.size() == 0) break;
-            for (int d : dArray) {
-                killTheEnemy(d);
-            }
-            for (int[] e : killEnemies) {
-//				System.out.println(Arrays.toString(e));
-                if (castle[e[0]][e[1]] != 1) {
+            Set<Enemy> killEnemies = killTheEnemy(dArray);
+            for (Enemy e : killEnemies) {
+                if (castleCopy[e.x][e.y] ==0) {
                     continue;
                 }
-                castle[e[0]][e[1]] = 0;
+                castleCopy[e.x][e.y] = 0;
                 killed += 1;
+                for (int i = 0; i < enemies.size(); i++) {
+                    if (e.x==enemies.get(i).x&&e.y==enemies.get(i).y){
+                        enemies.remove(i);
+                    }
+                }
             }
-            // 적의 위치 업데이트
+            // 아직 죽지 않은 적의 위치 업데이트
             updateEnemies();
         }
         return killed;
     }
 
-    // 로직 다시 짜기
-    private static void killTheEnemy(int d) {
-        int minDistance;
-        int[] minEnemy = new int[2];
-        for (int[] e : enemies) {
-            minDistance = D;
-            int distance = Math.abs(M - e[0]) + Math.abs(d - e[1]);
-            if (distance < minDistance) {
-                minEnemy[0] = e[0];
-                minEnemy[1] = e[1];
-                minDistance = distance;
+    private static Set<Enemy> killTheEnemy(int[] dArray) {
+        Set<Enemy> killEnemies = new HashSet<>();
+        for (int d : dArray) {
+            int minDistance = D;
+            Enemy minEnemy = null;
+            for (Enemy e:enemies) {
+                int distance = Math.abs(N - e.x) + Math.abs(d - e.y);
+                if (distance > minDistance) continue;
+                // distance <= minDistance일 경우 minEnemy 갱신
+                if (distance < minDistance) {
+                    minEnemy = e;
+                    minDistance = distance;
+                } else if (distance==minDistance) {
+                    // 만약 첫 적의 정보인 경우 minEnemy와 위치 비교 없이 바로 갱신
+                    if (minEnemy == null) {
+                        minEnemy = e;
+                    } else if (e.y < minEnemy.y) {
+                        minEnemy = e;
+                    }
+                }
             }
-//			if (distance==minDistance) {
-//				if (minEnemy[0]==-1) {
-//					minEnemy[0] = e[0];
-//					minEnemy[1] = e[1];
-//					minDistance = distance;
-//				} else if (e[0]<minEnemy[0]){
-//					minEnemy[0] = e[0];
-//					minEnemy[1] = e[1];
-//					minDistance = distance;
-//				}
-//			}
-
-
-//            if (distance == minDistance) {
-//                if (e[0])
-//                    minEnemy[0] = e[0];
-//                minEnemy[1] = e[1];
-//            }
+            if (minEnemy!=null) killEnemies.add(minEnemy);
         }
-        killEnemies.add(new int[]{minEnemy[0], minEnemy[1]});
+        return killEnemies;
     }
 
     private static void updateEnemies() {
-        for (int i = 0; i < enemies.size(); i++) {
-            int[] e = enemies.get(i);
-            e[0] += 1;
-            if (e[0] == M) {
+        if (enemies.size()==0) return;
+        for (int i = 0; i< enemies.size(); i++) {
+            int x = enemies.get(i).x;
+            int y = enemies.get(i).y;
+            castleCopy[x][y] = 0;
+            if (x+1 == N) {
                 enemies.remove(i);
+                i--;
                 continue;
             }
-            castle[e[0]][e[1]] = 1;
+            enemies.get(i).setX(x+1);
+            castleCopy[x+1][y] = 1;
         }
     }
 
+    private static class Enemy {
+        int x;
+        int y;
+
+        public Enemy(int x, int y) {
+            this.x = x;
+            this.y = y;
+        }
+
+        public void setX(int x) {
+            this.x = x;
+        }
+    }
 }
