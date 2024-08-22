@@ -1,4 +1,4 @@
-package BOJ.stack;
+package swea.d4;
 
 import java.io.BufferedReader;
 import java.io.IOException;
