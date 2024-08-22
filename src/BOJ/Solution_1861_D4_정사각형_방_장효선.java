@@ -78,6 +78,10 @@ public class Solution_1861_D4_정사각형_방_장효선 {
 			max = cnt;
 			minNum = start;
 		}
+
+		if (max==cnt) {
+			minNum = Math.min(minNum, start);
+		}
 	}
 
 }
