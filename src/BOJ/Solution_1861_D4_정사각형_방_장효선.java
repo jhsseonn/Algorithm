@@ -1,4 +1,4 @@
-package com.ssafy.ws;
+package BOJ;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -40,9 +40,9 @@ public class Solution_1861_D4_정사각형_방_장효선 {
 					cnt = 1;
 					visited[i][j] = true;
 					move(i, j, rooms[i][j]);
-//					for (int k = 0; k < N; k++) {
-//						Arrays.fill(visited[k], false);
-//					}
+					for (int k = 0; k < N; k++) {
+						Arrays.fill(visited[k], false);
+					}
 				}
 			}
 
@@ -60,16 +60,11 @@ public class Solution_1861_D4_정사각형_방_장효선 {
 			}
 			return;
 		}
-		
-		if (max < cnt) {
-			max = cnt;
-			minNum = start;
-			return;
-		}
+
 
 		for (int i = 0; i < 4; i++) {
 			int nr = r + dr[i];
-			int nc = r + dc[i];
+			int nc = c + dc[i];
 
 			if (nr > -1 && nr < N && nc > -1 && nc < N && !visited[nr][nc] &&(rooms[nr][nc] - rooms[r][c] == 1)) {
 				visited[nr][nc] = true;
@@ -79,6 +74,10 @@ public class Solution_1861_D4_정사각형_방_장효선 {
 			}
 		}
 
+		if (max < cnt) {
+			max = cnt;
+			minNum = start;
+		}
 	}
 
 }
