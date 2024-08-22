@@ -11,7 +11,7 @@ public class Solution_1952_모의SW_수영장_장효선 {
 	static StringTokenizer st;
 	static StringBuilder sb = new StringBuilder();
 	static int day, month, three, year;
-	static int[] swimDays, ticketCnt;
+	static int[] swimDays;
 	static int minAmount;
 	
 	public static void main(String[] args) throws IOException {
@@ -25,7 +25,6 @@ public class Solution_1952_모의SW_수영장_장효선 {
 			three = Integer.parseInt(st.nextToken());
 			year = Integer.parseInt(st.nextToken());
 			swimDays = new int[12];
-			ticketCnt = new int[4];
 			minAmount = Integer.MAX_VALUE;
 			
 			st = new StringTokenizer(br.readLine());
@@ -43,12 +42,13 @@ public class Solution_1952_모의SW_수영장_장효선 {
 		if (total>=minAmount) {
 			return;
 		}
-		if (depth==12) {
-			minAmount = Math.min(minAmount, total);
+		if (depth>=12) {
+			minAmount = total;
+			minAmount = Math.min(minAmount, year);
 			return;
 		}
 		
-		calculateAmount(depth+1, Math.min(month, swimDays[depth]*day));
+		calculateAmount(depth+1, Math.min(total+month, total+swimDays[depth]*day));
 		calculateAmount(depth+3, total+three);
 	}
 
