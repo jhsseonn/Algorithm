@@ -1,15 +1,13 @@
-package com.ssafy.ws;
+package BOJ.graph;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Deque;
-import java.util.List;
-import java.util.StringTokenizer;
+import java.util.*;
 
+/**
+ * 메모리: 16304kb / 시간: 140ms
+ */
 public class Main_1194_G1_달이_차오른다_가자_장효선 {
 
 	static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -46,7 +44,7 @@ public class Main_1194_G1_달이_차오른다_가자_장효선 {
 	}
 	
 	private static int bfs() {
-		Deque<Maze> q = new ArrayDeque<>();
+		Queue<Maze> q = new ArrayDeque<>();
 		q.offer(new Maze(startR, startC, 0, 0));
 		visited[startR][startC][0] = true;
 		
@@ -66,28 +64,20 @@ public class Main_1194_G1_달이_차오른다_가자_장효선 {
 				int nr = r+dr[i];
 				int nc = c+dc[i];
 				
-				if (nr<=-1 || nr>=N || nc<=-1 || nc>=M || map[nr][nc]=='#') {
-					continue;
-				}
-				
-				// A, B, C, D, E, F이면 현재 열쇠 정보를 확인한다(비트마스킹)
-				if (doors.contains(map[nr][nc])) {
-					if ((key & (1<<map[nr][nc]-'A'))==0) {
-						continue;
-					}
-				}
-				
+				if (nr<=-1 || nr>=N || nc<=-1 || nc>=M) continue;
+				if (map[nr][nc]=='#') continue;
+
 				// a, b, c, d, e, f 중 하나면 열쇠 정보를 받아준다
 				int nk = keys.contains(map[nr][nc]) ? key | 1<<(map[nr][nc]-'a') : key;
-				
 
-				if (visited[nr][nc][nk]) {
-					continue;
-				}
+				// A, B, C, D, E, F이면 현재 열쇠 정보를 확인한다(비트마스킹)
+				if (doors.contains(map[nr][nc]) && (key & (1<<map[nr][nc]-'A'))==0) continue;
+
+				if (visited[nr][nc][nk]) continue;
 				
 				// . 이면 이동한다
 				visited[nr][nc][nk] = true;
-				q.offer(new Maze(nr, nc, key, distance+1));
+				q.offer(new Maze(nr, nc, nk, distance+1));
 			}
 		}
 		
