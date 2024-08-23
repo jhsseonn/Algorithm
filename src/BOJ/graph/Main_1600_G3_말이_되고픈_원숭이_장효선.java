@@ -8,7 +8,7 @@ import java.util.Queue;
 import java.util.StringTokenizer;
 
 /**
- * 메모리:  / 시간:
+ * 메모리: 64,568kb / 시간: 588ms
  */
 public class Main_1600_G3_말이_되고픈_원숭이_장효선 {
 

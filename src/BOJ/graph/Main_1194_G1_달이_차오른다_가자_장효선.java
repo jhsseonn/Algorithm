@@ -6,7 +6,7 @@ import java.io.InputStreamReader;
 import java.util.*;
 
 /**
- * 메모리: 16304kb / 시간: 140ms
+ * 메모리: 16,304kb / 시간: 140ms
  */
 public class Main_1194_G1_달이_차오른다_가자_장효선 {
 
