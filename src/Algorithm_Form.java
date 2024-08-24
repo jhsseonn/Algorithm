@@ -16,7 +16,7 @@ public class Algorithm_Form {
 		for (int test_case = 1; test_case < T+1; test_case++) {
 			int result = 0;
 			
-			sb.append("#").append(test_case).append(result).append("\n");
+			sb.append("#").append(test_case).append(" ").append(result).append("\n");
 		}
 		System.out.println(sb);
 	}
