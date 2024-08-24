@@ -28,7 +28,7 @@ public class Solution_1873_D3_상호의_배틀필드_장효선 {
             C = Integer.parseInt(st.nextToken());
             map = new char[R][C];
             List<Character> cars = new ArrayList<>(Arrays.asList('^', 'v', '<', '>'));
-            Car c;
+            Car c = null;
 
             for (int i = 0; i < R; i++) {
                 String str = br.readLine();
@@ -41,38 +41,42 @@ public class Solution_1873_D3_상호의_배틀필드_장효선 {
             }
 
             int N = Integer.parseInt(br.readLine());
-            String str = br.readLine();
+            input = new char[N];
+            String dir = br.readLine();
             for (int i = 0; i < N; i++) {
-                input[i] = str.charAt(i);
+                char command = dir.charAt(i);
+                prototype(command, c);
             }
 
-            int result = 0;
-
-            sb.append("#").append(test_case).append(" ").append(result).append("\n");
+            sb.append("#").append(test_case).append(" ");
+            for (int i = 0; i < R; i++) {
+                sb.append(map[i]).append("\n");
+            }
         }
         System.out.println(sb);
     }
 
-    private static void prototype(char[] input, int N, Car car) {
-        for (int i = 0; i < N; i++) {
-            if (directions.contains(input[i])) {
-                char dir = car.dir;
-                if (dir=='U') {
-                    car.setDir('U');
-                } else if (dir=='D') {
-                    car.setDir('D');
-                } else if (dir=='L') {
-                    car.setDir('L');
-                } else if (dir=='R') {
-                    car.setDir('R');
-                }
-                move(car);
-                continue;
+    private static void prototype(char command, Car car) {
+        int r = car.r;
+        int c = car.c;
+        if (directions.contains(command)) {  // 방향을 옮기는 명령어이면
+            if (command=='U') {  // 전차의 방향을 바꾸고
+                car.setDir('^');
+                map[r][c] = '^';
+            } else if (command=='D') {
+                car.setDir('v');
+                map[r][c] = 'v';
+            } else if (command=='L') {
+                car.setDir('<');
+                map[r][c] = '<';
+            } else if (command=='R') {
+                car.setDir('>');
+                map[r][c] = '>';
             }
-            if (input[i]=='S') { // 포탑을 쏜다
-
-
-            }
+            move(car);  // 전차를 움직인다
+        }
+        if (command=='S') { // 포탑을 쏜다
+            shooting(car);
         }
     }
 
@@ -80,25 +84,25 @@ public class Solution_1873_D3_상호의_배틀필드_장효선 {
         int r = car.r;
         int c = car.c;
         char dir = car.dir;
-        if (dir=='U') {
+        if (dir=='^') {
             if (r-1 >-1 && r-1<R && map[r-1][c]=='.') {
                 map[r][c] = '.';
                 map[r-1][c]='^';
                 car.setR(r-1);
             }
-        } else if (dir=='D') {
+        } else if (dir=='v') {
             if (r+1 >-1 && r+1<R && map[r+1][c]=='.') {
                 map[r][c] = '.';
                 map[r+1][c]='v';
                 car.setR(r+1);
             }
-        } else if (dir=='L') {
+        } else if (dir=='<') {
             if (c-1 >-1 && c-1<C && map[r][c-1]=='.') {
                 map[r][c] = '.';
                 map[r][c-1]='<';
                 car.setC(c-1);
             }
-        } else if (dir=='R') {
+        } else if (dir=='>') {
             if (c+1 >-1 && c+1<C && map[r][c+1]=='.') {
                 map[r][c] = '.';
                 map[r][c+1]='>';
@@ -110,18 +114,51 @@ public class Solution_1873_D3_상호의_배틀필드_장효선 {
     private static void shooting(Car car) {
         // * : 벽돌로 만들어진 벽은 포탑으로 뚫을 수 있다
         // # : 강철로 만들어진 벽은 뚫을 수 없다
-        // - : 물에는 들어갈 수 없다.
         int r = car.r;
         int c = car.c;
         int dir = car.dir;
 
-        if (dir=='U') {
-            for (int i = r-1; i >= 0; i--) {
-
+        if (dir == '^') {
+            if (r==0) return;
+            for (int i = r - 1; i >= 0; i--) {
+                if (map[i][c] == '#') {
+                    break;
+                } else if (map[i][c] == '*') {
+                    map[i][c] = '.';
+                    break;
+                }
+            }
+        } else if (dir == 'v') {
+            if (r==R-1) return;
+            for (int i = r+1; i < R; i++) {
+                if (map[i][c] == '#') {
+                    break;
+                } else if (map[i][c] == '*') {
+                    map[i][c] = '.';
+                    break;
+                }
+            }
+        } else if (dir == '<') {
+            if (c==0) return;
+            for (int i = c-1; i >= 0; i--) {
+                if (map[r][i] == '#') {
+                    break;
+                } else if (map[r][i] == '*') {
+                    map[r][i] = '.';
+                    break;
+                }
+            }
+        } else if (dir == '>') {
+            if (c==C-1) return;
+            for (int i = c+1; i < C; i++) {
+                if (map[r][i] == '#') {
+                    break;
+                } else if (map[r][i] == '*') {
+                    map[r][i] = '.';
+                    break;
+                }
             }
         }
-
-
     }
 
     private static class Car {
