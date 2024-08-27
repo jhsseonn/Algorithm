@@ -50,12 +50,19 @@ public class Main_17143_G1_낚시왕_장효선 {
 				System.out.println("round: "+c+" get: "+arr[i][c]);
 				ans+=arr[i][c];  // 상어 잡음
 				arr[i][c] = 0;  // 잡은 곳 초기화
+				removeShark(i, c);
 				break;
 			}
 		}
 		
 		// 상어들이 움직임
 		moveShark();
+	}
+	
+	private static void removeShark(int r, int c) {
+		for (int i = 0; i < sharks.size(); i++) {
+			if (sharks.get(i).r ==r && sharks.get(i).c == c) sharks.remove(i);
+		}
 	}
 	
 	private static void moveShark() {
