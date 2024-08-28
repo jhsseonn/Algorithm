@@ -1,4 +1,4 @@
-package swea.모의SW;
+package swea.d4;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -10,7 +10,7 @@ import java.util.StringTokenizer;
 /**
  * 메모리: 20,552kb / 시간: 123ms
  */
-public class Solution_1238_모의_Contact_장효선 {
+public class Solution_1238_D4_Contact_장효선 {
     static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     static StringTokenizer st;
     static StringBuilder sb = new StringBuilder();
