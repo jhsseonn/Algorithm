@@ -10,13 +10,10 @@ public class Solution_2105_모의_디저트_가페_장효선 {
     static StringTokenizer st;
     static StringBuilder sb = new StringBuilder();
     static int N, startR, startC, ans;
-    static int[] dr = {-1, 1, 0, 0};
-    static int[] dc = {0, 0, -1, 1};
     static int[] cdr = {1, 1, -1, -1};
     static int[] cdc = {1, -1, -1, 1};
     static int[][] cafe;
     static boolean[][] visited;
-    static boolean[][] checked;
     static boolean[] isNotValid;
 
     public static void main(String[] args) throws IOException {
@@ -27,7 +24,6 @@ public class Solution_2105_모의_디저트_가페_장효선 {
             st = new StringTokenizer(br.readLine());
             N = Integer.parseInt(st.nextToken());
             cafe = new int[N][N];
-            checked = new boolean[N][N];
             ans = 0;
 
             for (int i = 0; i < N; i++) {
