@@ -1,4 +1,4 @@
-package com.ssafy.ws;
+package swea.모의SW;
 
 import java.io.BufferedReader;
 import java.io.IOException;
