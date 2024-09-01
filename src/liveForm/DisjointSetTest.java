@@ -12,12 +12,24 @@ public class DisjointSetTest {
 	static int N;
 	static int[] parents;
 	public static void make() {
-		
+		parents = new int[N+1];
+		for (int i = 1; i <= N; i++) {
+			parents[i] = i;
+		}
 	}
 	//find함수 구현해 주세요
+	public static int findSet(int a) {
+		if (parents[a]==a) return a;
+		return parents[a] = findSet(parents[a]);
+	}
 	
 	public static boolean union(int a, int b) {
-		
+		int aRoot = findSet(a);
+		int bRoot = findSet(b);
+		if (aRoot == bRoot) return false;
+
+//		parents[aRoot]+=parents[bRoot];
+		parents[aRoot] = bRoot;
 		return true;
 	}
 	public static void main(String[] args) {

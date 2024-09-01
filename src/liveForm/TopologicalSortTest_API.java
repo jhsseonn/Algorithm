@@ -31,8 +31,29 @@ public class TopologicalSortTest_API {
 			list[i] = new ArrayList<>();
 		}
 		
-		//간선 정보 입력 받기 
-		
+		//간선 정보 입력 받기
+		for (int i = 0; i < E; i++) {
+			st = new StringTokenizer(in.readLine());
+			int from = Integer.parseInt(st.nextToken());
+			int to = Integer.parseInt(st.nextToken());
+			list[from].add(to);
+			inDegree[to]++;
+		}
+
+		for (int i = 1; i <= N; i++) {
+			if (inDegree[i]==0) q.add(i);
+		}
+
+		while(!q.isEmpty()) {
+			int cur = q.poll();
+			result.add(cur);
+
+			for (int n:list[cur]) {
+				if (--inDegree[n]==0) {
+					q.add(n);
+				}
+			}
+		}
 		
 		//3. 결과 출력
 		int size = result.size();
