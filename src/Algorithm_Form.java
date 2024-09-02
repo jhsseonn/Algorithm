@@ -10,8 +10,7 @@ public class Algorithm_Form {
 	static StringBuilder sb = new StringBuilder();
 	
 	public static void main(String[] args) throws IOException {
-		st = new StringTokenizer(br.readLine());
-		int T = Integer.parseInt(st.nextToken());
+		int T = Integer.parseInt(br.readLine());
 		
 		for (int test_case = 1; test_case < T+1; test_case++) {
 			int result = 0;
