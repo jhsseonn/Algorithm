@@ -1,13 +1,19 @@
-package swea.모의SW;
+package com.ssafy;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.StringTokenizer;
 
+/**
+ * 
+ * 메모리: 22,548kb / 시간: 165ms
+ *
+ */
 public class Solution_2115_벌꿀채취_장효선 {
     static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     static StringTokenizer st;
@@ -16,7 +22,7 @@ public class Solution_2115_벌꿀채취_장효선 {
     static int[][] honeyComb;
     static List<Honey> honeys;
     static int[] values;
-    static boolean[] selected;
+    static boolean[] selected, selectedHoney;
 
     public static void main(String[] args) throws IOException {
         int T = Integer.parseInt(br.readLine());
@@ -28,14 +34,15 @@ public class Solution_2115_벌꿀채취_장효선 {
             C = Integer.parseInt(st.nextToken());
             honeyComb = new int[N][N];
             honeys = new ArrayList<>();
-            maxProfit = Integer.MIN_VALUE;
 
+            // 입력받기 
             for (int i = 0; i < N; i++) {
                 st = new StringTokenizer(br.readLine());
                 for (int j = 0; j < N; j++) {
                     honeyComb[i][j] = Integer.parseInt(st.nextToken());
                 }
             }
+            
             makeCases();
 
             sb.append("#").append(test_case).append(" ").append(getResult()).append("\n");
@@ -45,11 +52,12 @@ public class Solution_2115_벌꿀채취_장효선 {
 
     // 모든 M개의 통의 경우의 수 구하기
     private static void makeCases() {
-        for (int i = 0; i < N; i++) {
-            for (int j = 0; j < N-M; j++) {
+    	for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N-M+1; j++) {
                 // M개의 벌통에서 합이 C를 넘지 않으면서 제곱수의 합이 최대인 부분집합 구하기
                 values = new int[M];
                 selected = new boolean[M];
+                maxProfit = Integer.MIN_VALUE;
                 for (int k = j; k < j+M; k++) {
                     values[k-j] = honeyComb[i][k];
                 }
@@ -66,8 +74,7 @@ public class Solution_2115_벌꿀채취_장효선 {
             int res = 0;
             for (int i = 0; i < selected.length; i++) {
                 if (selected[i]) {
-                    int v = values[idx];
-                    res+=v*v;
+                    res+=values[i]*values[i];
                 }
             }
             maxProfit = Math.max(maxProfit, res);
@@ -82,15 +89,46 @@ public class Solution_2115_벌꿀채취_장효선 {
 
     // M개의 통의 경우의 수 중 최선의 값 2개 뽑기
     private static int getResult() {
-        Honey[] honeyArr = new Honey[honeys.size()];
-        for (int i = 0; i<honeys.size(); i++) {
-            System.out.println(honeys.get(i).r+" "+honeys.get(i).startC+" "+honeys.get(i).endC+" "+honeys.get(i).profit);
-            honeyArr[i] = honeys.get(i);
-        }
-        Arrays.sort(honeyArr);
-        Honey honey1 = honeyArr[0];
-        Honey honey2 = honeyArr[1];
-        return honey1.profit+honey2.profit;
+        Collections.sort(honeys);
+        selectedHoney = new boolean[honeys.size()];
+        maxProfit = Integer.MIN_VALUE;
+        
+        perm(0);
+        
+        return maxProfit;
+    }
+    
+    private static void perm(int depth) {
+    	if (depth==2) {
+    		Honey[] select = new Honey[2];
+    		int idx = 0;
+    		for (int i = 0; i < selectedHoney.length; i++) {
+				if (selectedHoney[i] && idx<2) {
+					select[idx] = honeys.get(i);
+					idx+=1;
+				}
+			}
+    		
+    		Honey honey1 = select[0];
+    		Honey honey2 = select[1];
+    		
+    		if (honey1.r == honey2.r) {
+    			if (honey1.startC<=honey2.startC && honey1.endC >= honey2.startC) return;
+    			if (honey1.startC>=honey2.startC && honey1.startC <= honey2.endC) return;
+    		}
+    		
+    		maxProfit = Math.max(maxProfit, honey1.profit+honey2.profit);
+    		return;
+    	}
+    	
+    	if (maxProfit!=Integer.MIN_VALUE) return;
+    	
+    	for (int i = 0; i < honeys.size(); i++) {
+			if (selectedHoney[i]) continue;
+			selectedHoney[i] = true;
+			perm(depth+1);
+			selectedHoney[i] = false;
+		}
     }
 
     private static class Honey implements Comparable<Honey> {
