@@ -82,6 +82,8 @@ public class Solution_2477_모의_차량_정비소_장효선 {
 	
 	private static void startService() {
 		// 시간 지날 때마다 
+		// temp를 k로 둬 
+		// while문 조건 바꿔보기
 		while(true) {
 			// 정비가 끝났으면 뽑고 찾는 사람이 맞는지 확인, 맞으면 id 더해주기
 			while(bState.peek().time==cnt) {
