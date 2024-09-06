@@ -9,24 +9,24 @@ import java.util.Deque;
 import java.util.PriorityQueue;
 import java.util.StringTokenizer;
 
+/**
+ * 
+ * 28,124kb / 185ms
+ *
+ */
 public class Solution_2477_모의_차량_정비소_장효선 {
 
 	static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 	static StringTokenizer st;
 	static StringBuilder sb = new StringBuilder();
-	static int N, M, K, A, B, cnt, customerCnt, ans;
+	static int N, M, K, A, B, ans;
 	static int[] aTime, bTime;
-	static PriorityQueue<Customer> aState, bState;
-	static boolean[] aIsValid, bIsValid;
+	static int[] aState, bState;
 	static Customer[] customers;
 	
 	// 대기 큐
-	static PriorityQueue<Customer> waitA = new PriorityQueue<>((a, b) -> {
-		return a.time==b.time? a.id - b.id: a.time-b.time;
-	});
-	static PriorityQueue<Customer> waitB = new PriorityQueue<>((a, b) -> {
-		return a.time==b.time? a.a - b.a: a.time-b.time;
-	});
+	static Deque<Customer> aWait = new ArrayDeque<>();
+	static Deque<Customer> bWait = new ArrayDeque<>();
 	
 	public static void main(String[] args) throws IOException {
 		st = new StringTokenizer(br.readLine());
@@ -41,37 +41,31 @@ public class Solution_2477_모의_차량_정비소_장효선 {
 			B = Integer.parseInt(st.nextToken());
 			
 			aTime = new int[N+1];
-			aState = new PriorityQueue<>((a, b) -> (a.time - b.time));
+			aState = new int[N+1];
 			bTime = new int[M+1];
-			bState = new PriorityQueue<>((a, b) -> (a.time - b.time));
+			bState = new int[M+1];
 			customers = new Customer[K+1];
-			aIsValid = new boolean[N+1];
-			bIsValid = new boolean[M+1];
-			
-			Arrays.fill(aIsValid, true);
-			Arrays.fill(bIsValid, true);
+			ans = 0;
 			
 			st = new StringTokenizer(br.readLine());
+			aTime[0] = 0;
 			for (int i = 1; i < N+1; i++) {
 				aTime[i] = Integer.parseInt(st.nextToken());
 			}
 			
+			bTime[0] = 0;
 			st = new StringTokenizer(br.readLine());
 			for (int i = 1; i < M+1; i++) {
 				bTime[i] = Integer.parseInt(st.nextToken());				
 			}
 			
 			// a, b의 값이 0인 경우 아직 방문x
+			customers[0] = null;
 			st = new StringTokenizer(br.readLine());
 			for (int i = 1; i <= K; i++) {
 				customers[i] = new Customer(i, Integer.parseInt(st.nextToken()), 0, 0);
 			}
-			
-			// 가장 처음 방문하는 초기값 설정
-			aState.offer(customers[1]);
-			customers[1].a = 1;
-			customers[1].time+=aTime[1];
-			aIsValid[1] = false;
+
 			startService();
 			
 			if (ans==0) ans=-1;
@@ -81,96 +75,60 @@ public class Solution_2477_모의_차량_정비소_장효선 {
 	}
 	
 	private static void startService() {
-		// 시간 지날 때마다 
-		// temp를 k로 둬 
-		// while문 조건 바꿔보기
-		while(true) {
+		int arrivedIdx = 1;
+		int time = 0;
+		int customerCnt = 0;
+		while(customerCnt < K) {
+			for (int i = arrivedIdx; i < K+1; i++) {
+				if (customers[i].time==time) {
+					aWait.offer(customers[i]); 
+					arrivedIdx+=1;
+				}
+			}
 			// 정비가 끝났으면 뽑고 찾는 사람이 맞는지 확인, 맞으면 id 더해주기
-			while(bState.peek().time==cnt) {
-				Customer bCur = bState.poll();
-				if (bCur.a==A && bCur.b==B) ans+=bCur.id;
-				customerCnt++;
-//				System.out.println(bCur.id+" "+bCur.a+" "+bCur.b+" "+bCur.time);
-				bIsValid[bCur.b] = true;
-			}
-			
-			if (customerCnt==K) break;
-			
-			// 접수가 끝남
-			while(aState.peek().time==cnt) {
-				Customer aCur = aState.poll();
-				if (bState.size()==bTime.length) { // 정비소 큐가 꽉 찼으면 대기큐로 감
-					waitB.offer(aCur);
-				}
-				else {
-					goToB(aCur);
+			for (int i = 1; i <= M; i++) {
+				if (bState[i]==0) continue;
+				Customer cur = customers[bState[i]];
+				if (cur.time == time) {
+					customerCnt++;					
+					bState[i] = 0;
+//					System.out.println(cur.a+" "+cur.b+" "+cur.id);
+					if (cur.a==A && cur.b==B) ans+=cur.id;
 				}
 			}
 			
-			for (Customer cur : customers) {
-				if (cur==null) continue;
-				if (cur.a==0 && cur.b==0) {
-					if (aState.size()==aTime.length) { // 정비소 큐가 꽉 찼으면 대기큐로 감
-						waitA.offer(cur);
-					}
-					else {
-						goToA(cur);
-					}
-				}
-			}
-			cnt++;
-		}
-	}
-	
-	private static void goToB(Customer cur) {
-		// 대기큐가 비어있을 경우
-		if (waitB.isEmpty()) {
-			for (int i = 1; i < bIsValid.length; i++) {
-				if (bIsValid[i]) {
+			// 정비 대기 큐에 있는 사람을 정비 창구로
+			for (int i = 1; i <= M; i++) {
+				if (bState[i]==0 && !bWait.isEmpty()) {
+					Customer cur = bWait.poll();
+					bState[i] = cur.id;
+					cur.time = time+bTime[i];
 					cur.b = i;
-					cur.time = cnt+bTime[i];
-					bIsValid[i] = false;
-					break;
 				}
 			}
-			bState.offer(cur);
-		} else { // 대기큐가 비어있지 않은 경우
-			Customer waitBCur = waitB.poll();
-			for (int i = 1; i < bIsValid.length; i++) {
-				if (bIsValid[i]) {
-					waitBCur.b = i;
-					waitBCur.time = cnt+bTime[i];
-					bIsValid[i] = false;
-					break;
+			
+			// 접수 창구
+			for (int i = 1; i <= N; i++) {
+				if (aState[i]==0) continue;
+				Customer cur = customers[aState[i]];
+				if (cur.time == time) {	
+					bWait.offer(cur);
+					aState[i] = 0;
 				}
 			}
-			bState.offer(waitBCur);
-		}
-	}
-	
-	private static void goToA(Customer cur) {
-		// 대기큐가 비어있을 경우
-		if (waitA.isEmpty()) {
-			for (int i = 1; i < aIsValid.length; i++) {
-				if (aIsValid[i]) {
-					cur.a = i;
-					cur.time = cnt+aTime[i];
-					aIsValid[i] = false;
-					break;
+			
+			// 접수 대기 큐
+			for (int i = 1; i <= N; i++) {
+				if (aState[i]!=0) continue;
+				if (!aWait.isEmpty()) {
+					Customer cur = aWait.poll();
+					aState[i] = cur.id;
+					cur.time = time+aTime[i];
+					cur.a = i;						
 				}
 			}
-			aState.offer(cur);
-		} else { // 대기큐가 비어있지 않은 경우
-			Customer waitACur = waitA.poll();
-			for (int i = 1; i < aIsValid.length; i++) {
-				if (aIsValid[i]) {
-					waitACur.b = i;
-					waitACur.time = cnt+aTime[i];
-					aIsValid[i] = false;
-					break;
-				}
-			}
-			aState.offer(waitACur);
+			
+			time++;
 		}
 	}
 	
