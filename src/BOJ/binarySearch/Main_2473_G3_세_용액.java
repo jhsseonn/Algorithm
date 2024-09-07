@@ -6,48 +6,53 @@ import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.StringTokenizer;
 
+/**
+ * 15,908kb / 224ms
+ */
 public class Main_2473_G3_세_용액 {
     static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     static StringTokenizer st;
     static StringBuilder sb = new StringBuilder();
+    static long minSum;
+    static long[] solvent, res;
 
     public static void main(String[] args) throws IOException {
         int N = Integer.parseInt(br.readLine());
-        int[] solvent = new int[N];
-        int minSum = Integer.MAX_VALUE;
-        int ansS, ansE, ansM;
-        ansS = ansE = ansM = 0;
+        solvent = new long[N];
+        minSum = Long.MAX_VALUE;
+        res = new long[3];
 
         st = new StringTokenizer(br.readLine());
         for (int i = 0; i < N; i++) {
-            solvent[i] = Integer.parseInt(st.nextToken());
+            solvent[i] = Long.parseLong(st.nextToken());
         }
 
         Arrays.sort(solvent);
-        int start = 0;
-        int end = solvent.length-1;
 
-        while(start!=end) {
-            int mid = (start+end)/2;
-            // start와 end 사이 범위 내에서 0과 가장 가까운 수 찾기
+        for (int i = 0; i < N-2; i++) {
+            int start =i;
+            int mid = i+1;
+            int end = solvent.length-1;
 
+            while(mid<end) {
+                long curSum = solvent[start]+solvent[mid]+solvent[end];
+                if (minSum>Math.abs(curSum)) {  // 최솟값 갱신
+                    minSum = Math.abs(curSum);
+                    res[0] = solvent[start];
+                    res[1] = solvent[mid];
+                    res[2] = solvent[end];
+                }
 
-            int sum = solvent[start]+solvent[end]+solvent[mid];
-            if (minSum>Math.abs(sum)) {
-                minSum = Math.abs(sum);
-                ansS = start;
-                ansE = end;
-                ansM = mid;
+                if (curSum<0) mid+=1;
+                else if (curSum>0) end-=1;
+                else break;
             }
-            if (sum<0) start+=1;
-            if (sum>0) end-=1;
-            if (sum==0) break;
         }
 
-        int[] res = new int[] {solvent[ansS], solvent[ansM], solvent[ansE]};
+
         Arrays.sort(res);
 
-        for (int a:res) {
+        for (long a:res) {
             System.out.print(a+" ");
         }
     }
