@@ -15,7 +15,7 @@ public class Solution_2383_모의_점심식사_시간_장효선 {
 	static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 	static StringTokenizer st;
 	static StringBuilder sb = new StringBuilder();
-	static int N, S, minTime;
+	static int N, minTime;
 	static int[][] room;
 	static List<Person> people;
 	static List<Stair> stairs;
@@ -73,14 +73,12 @@ public class Solution_2383_모의_점심식사_시간_장효선 {
 		// 계단까지 걸리는 시간 할당(기다리는 시간 포함)
 		for (int i = 0; i < subset1.size(); i++) {
 			Person p = subset1.get(i);
-//			System.out.println(p.x+" "+p.y+" "+p.minute);
 			p.minute = Math.abs(p.x-s1.x)+Math.abs(p.y-s1.y)+1;
 			p1[i] = p;
 		}
 		
 		for (int i = 0; i < subset2.size(); i++) {
 			Person p = subset2.get(i);
-//			System.out.println(p.x+" "+p.y+" "+p.minute);
 			p.minute = Math.abs(p.x-s2.x)+Math.abs(p.y-s2.y)+1;
 			p2[i] = p;
 		}
@@ -93,69 +91,63 @@ public class Solution_2383_모의_점심식사_시간_장효선 {
 		
 		// 각각 계단을 내려오는 데 걸리는 시간 계산하기
 		// 계단 1번에서 사람들이 내려오는 시간 계산
-		if (subset1.size()!=0) {
-			dq1.offer(subset1.get(0));
+		if (p1.length!=0) {
+			dq1.offer(p1[0]);
 		}
 		
 		int stair1Minute = 0;
 		int idx = 1;
 		while(!dq1.isEmpty()) {
-			if (idx==subset1.size()) {
+			if (idx==p1.length) {
 				Person p = dq1.poll();
-				stair1Minute = p.minute;
-				p.minute=0;
+				stair1Minute = p.minute+s1.len;
 				continue;
 			}
 			
 			// 큐의 크기가 3보다 작으면 큐에 사람 넣어주기
 			if (dq1.size()<3) {
-				dq1.offer(subset1.get(idx));
+				dq1.offer(p1[idx]);
 				idx+=1;
 			} else {
-				Person p = dq1.poll();
-				Person cur = subset1.get(idx);
+				Person p = dq1.peek();
+				Person cur = p1[idx];
 				if (cur.minute - p.minute>=s1.len) {
+					dq1.poll();
 					dq1.offer(cur);
 					idx+=1;
 				} else {
-					cur.minute+=s1.len-(cur.minute - p.minute);
-					dq1.offer(cur);
-					idx+=1;
+					cur.minute +=1;
 				}
-				p.minute=0;
 			}
 		}
 		
 		// 계단 2번에서 사람들이 내려오는 시간 계산하기
-		if (subset2.size()!=0) {
-			dq2.offer(subset2.get(0));
+		if (p2.length!=0) {
+			dq2.offer(p2[0]);
 		}
 		int stair2Minute = 0;
-		idx = 1;
+		int idx2 = 1;
 		while(!dq2.isEmpty()) {
-			if (idx==subset2.size()) {
+			if (idx2==p2.length) {
 				Person p = dq2.poll();
-				stair2Minute = p.minute;
-				p.minute=0;
+				stair2Minute = p.minute+s2.len;
 				continue;
 			}
 			
 			// 큐의 크기가 3보다 작으면 큐에 사람 넣어주기
 			if (dq2.size()<3) {
-				dq2.offer(subset2.get(idx));
-				idx+=1;
+				dq2.offer(p2[idx2]);
+				idx2+=1;
 			} else {
-				Person p = dq2.poll();
-				Person cur = subset2.get(idx);
+				Person p = dq2.peek();
+				Person cur = p2[idx2];
 				if (cur.minute - p.minute>=s2.len) {
+					dq2.poll();
 					dq2.offer(cur);
-					idx+=1;
+					idx2+=1;
 				} else {
-					cur.minute+=s2.len-(cur.minute - p.minute);
-					dq2.offer(cur);
-					idx+=1;
+					cur.minute +=1;
 				}
-				p.minute=0;
 			}
 		}
 		

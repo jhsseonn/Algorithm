@@ -3,66 +3,77 @@ package swea.d4;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.StringTokenizer;
 
+/**
+ * 메모리: 125,028kb / 시간: 793ms
+ */
 public class Solution_1251_D4_하나로_장효선 {
 
 	static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-	static StringTokenizer st;
 	static StringBuilder sb = new StringBuilder();
 	static int N;
 	static double E;
 	static Island[] islands;
 	static int[] parents;
-	static Edge[] edges;
+	static List<Edge> edges;
 	
 	public static void main(String[] args) throws IOException {
 		int T = Integer.parseInt(br.readLine());
 		
 		for (int test_case = 1; test_case < T+1; test_case++) {
-			N = Integer.parseInt(br.readLine());
-			
-			edges = new Edge[N*(N-1)/2];
-			
-			StringTokenizer xs = new StringTokenizer(br.readLine());
-			StringTokenizer ys = new StringTokenizer(br.readLine());
-			islands = new Island[N];
-			E = Double.parseDouble(br.readLine());
-			
+			N = Integer.parseInt(br.readLine());  // 섬의 개수
+
+
+			StringTokenizer xs = new StringTokenizer(br.readLine());  // 섬들의 x좌표
+			StringTokenizer ys = new StringTokenizer(br.readLine());  // 섬들의 y좌표
+			islands = new Island[N];  // 섬들의 좌표 위치 정보를 가지고 있는 배열
+			E = Double.parseDouble(br.readLine());  // 환경 부담 세율
+
 			for (int i = 0; i < N; i++) {
-				double x = Integer.parseInt(xs.nextToken());
-				double y = Integer.parseInt(ys.nextToken());
+				double x = Double.parseDouble(xs.nextToken());
+				double y = Double.parseDouble(ys.nextToken());
 				islands[i] = new Island(x, y);
 			}
-			
+
+			edges = new ArrayList<>();
 			for (int i = 0; i < N-1; i++) {
 				for (int j = i+1; j < N; j++) {
 					double xd = Math.pow(islands[i].x-islands[j].x, 2);
 					double yd = Math.pow(islands[i].y-islands[j].y, 2);
-					double L = (xd+yd)*E;
-					edges[i] = new Edge(i, j, L);
+					double L = (xd+yd)*E;  // 간선의 길이의 제곱에 E를 곱한 것만큼이 가중치이므로
+					edges.add(new Edge(i, j, L));
 				}
 			}
+
+			Edge[] edgesArray = new Edge[edges.size()];
+			for (int i = 0; i < edges.size(); i++) {
+				edgesArray[i] = edges.get(i);
+			}
+
+			Arrays.sort(edgesArray);
 			
-			Arrays.sort(edges);
-			
-			sb.append("#").append(test_case).append(" ").append((long)getBridge()).append("\n");
+			sb.append("#").append(test_case).append(" ").append((long)getBridge(edgesArray)).append("\n");
 		}
 		System.out.println(sb);
 	}
 	
-	private static int getBridge() {
+	private static double getBridge(Edge[] edges) {
 		make();
 		
-		int result = 0, cnt = 0;
+		double result = 0;
+		int cnt = 0;
 		for (Edge edge : edges) {
 			if (union(edge.start, edge.end)) {
 				result+=edge.L;
-				if (++cnt==N-1) break;
+				cnt+=1;
+				if (cnt==N-1) break;
 			}
 		}
-		return result+=0.5;
+		return result+0.5;
 	}
 	
 	private static void make() {
@@ -82,7 +93,7 @@ public class Solution_1251_D4_하나로_장효선 {
 		int bRoot = findSet(b);
 		if (aRoot==bRoot) return false;
 		
-		parents[aRoot]+=parents[bRoot];
+//		parents[aRoot]+=parents[bRoot];
 		parents[bRoot]= aRoot;
 		return true;
 	}
