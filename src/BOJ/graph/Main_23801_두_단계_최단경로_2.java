@@ -17,21 +17,17 @@ public class Main_23801_두_단계_최단경로_2 {
     static long[] minDistanceXY;
     static long[] minDistanceYZ;
     static long INF = Long.MAX_VALUE;
-    static boolean[] isP;
-    static boolean[] visited;
 
     public static void main(String[] args) throws IOException {
         st = new StringTokenizer(br.readLine());
         N = Integer.parseInt(st.nextToken());
         M = Integer.parseInt(st.nextToken());
-        isP = new boolean[N+1];
         adjList = new ArrayList[N+1];
         minDistanceXY = new long[N+1];
         minDistanceYZ = new long[N+1];
-        visited = new boolean[N+1];
         long minDistance = INF;
 
-        for (int i = 0; i < N+1; i++) {
+        for (int i = 1; i < N+1; i++) {
             adjList[i] = new ArrayList<>();
             minDistanceXY[i] = INF;
             minDistanceYZ[i] = INF;
@@ -55,16 +51,13 @@ public class Main_23801_두_단계_최단경로_2 {
         P = Integer.parseInt(br.readLine());
 
         getMinDistanceXY(X);
-        Arrays.fill(visited, false);
         getMinDistanceYZ(Z);
 
         st = new StringTokenizer(br.readLine());
         for (int i = 0; i < P; i++) {
             int p = Integer.parseInt(st.nextToken());
-            if (minDistanceXY[p]==INF || minDistanceYZ[p]==INF) continue;
-            long d = minDistanceXY[p] + minDistanceYZ[p];
-            if (minDistance>d) {
-                minDistance = d;
+            if (minDistanceXY[p]!=INF && minDistanceYZ[p]!=INF) {
+                minDistance = Math.min(minDistance, minDistanceXY[p]+minDistanceYZ[p]);
             }
         }
 
@@ -76,22 +69,16 @@ public class Main_23801_두_단계_최단경로_2 {
     private static void getMinDistanceXY(int start) {
         minDistanceXY[start] = 0;
 
-        PriorityQueue<Node> pq = new PriorityQueue<>((a, b) -> {
-            if (a.w < b.w) return -1;
-            else if (a.w > b.w) return 1;
-            return 0;
-        });
+        PriorityQueue<Node> pq = new PriorityQueue<>((a, b) -> Long.compare(a.w, b.w));
         pq.offer(new Node(start, 0));
 
         while(!pq.isEmpty()) {
             Node cur = pq.poll();
-            if (visited[cur.to]) continue;
             if (minDistanceXY[cur.to] < cur.w) continue;
 
             for (Node e:adjList[cur.to]) {
-                if (visited[e.to]) continue;
-                if (minDistanceXY[e.to] < cur.w + e.w) continue;
-                minDistanceXY[e.to] = cur.w+e.w;
+                if (minDistanceXY[e.to] <= minDistanceXY[cur.to] + e.w) continue;
+                minDistanceXY[e.to] = minDistanceXY[cur.to]+e.w;
                 pq.offer(new Node(e.to, minDistanceXY[e.to]));
             }
         }
@@ -100,22 +87,16 @@ public class Main_23801_두_단계_최단경로_2 {
     private static void getMinDistanceYZ(int start) {
         minDistanceYZ[start] = 0;
 
-        PriorityQueue<Node> pq = new PriorityQueue<>((a, b) -> {
-            if (a.w < b.w) return -1;
-            else if (a.w > b.w) return 1;
-            return 0;
-        });
+        PriorityQueue<Node> pq = new PriorityQueue<>((a, b) -> Long.compare(a.w, b.w));
         pq.offer(new Node(start, 0));
 
         while(!pq.isEmpty()) {
             Node cur = pq.poll();
-            if (visited[cur.to]) continue;
             if (minDistanceYZ[cur.to] < cur.w) continue;
 
             for (Node e:adjList[cur.to]) {
-                if (visited[e.to]) continue;
-                if (minDistanceYZ[e.to] < cur.w + e.w) continue;
-                minDistanceYZ[e.to] = cur.w+e.w;
+                if (minDistanceYZ[e.to] <= minDistanceYZ[cur.to] + e.w) continue;
+                minDistanceYZ[e.to] = minDistanceYZ[cur.to]+e.w;
                 pq.offer(new Node(e.to, minDistanceYZ[e.to]));
             }
         }
