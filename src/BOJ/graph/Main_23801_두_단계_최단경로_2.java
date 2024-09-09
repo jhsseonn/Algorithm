@@ -4,11 +4,13 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.PriorityQueue;
 import java.util.StringTokenizer;
 
+/**
+ * 157,364kb / 1180ms
+ */
 public class Main_23801_두_단계_최단경로_2 {
     static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     static StringTokenizer st;
@@ -22,12 +24,12 @@ public class Main_23801_두_단계_최단경로_2 {
         st = new StringTokenizer(br.readLine());
         N = Integer.parseInt(st.nextToken());
         M = Integer.parseInt(st.nextToken());
-        adjList = new ArrayList[N+1];
-        minDistanceXY = new long[N+1];
-        minDistanceYZ = new long[N+1];
+        adjList = new ArrayList[N + 1];
+        minDistanceXY = new long[N + 1];
+        minDistanceYZ = new long[N + 1];
         long minDistance = INF;
 
-        for (int i = 1; i < N+1; i++) {
+        for (int i = 1; i < N + 1; i++) {
             adjList[i] = new ArrayList<>();
             minDistanceXY[i] = INF;
             minDistanceYZ[i] = INF;
@@ -56,12 +58,12 @@ public class Main_23801_두_단계_최단경로_2 {
         st = new StringTokenizer(br.readLine());
         for (int i = 0; i < P; i++) {
             int p = Integer.parseInt(st.nextToken());
-            if (minDistanceXY[p]!=INF && minDistanceYZ[p]!=INF) {
-                minDistance = Math.min(minDistance, minDistanceXY[p]+minDistanceYZ[p]);
+            if (minDistanceXY[p] != INF && minDistanceYZ[p] != INF) {
+                minDistance = Math.min(minDistance, minDistanceXY[p] + minDistanceYZ[p]);
             }
         }
 
-        if (minDistance==INF) minDistance = -1;
+        if (minDistance == INF) minDistance = -1;
 
         System.out.println(minDistance);
     }
@@ -72,13 +74,13 @@ public class Main_23801_두_단계_최단경로_2 {
         PriorityQueue<Node> pq = new PriorityQueue<>((a, b) -> Long.compare(a.w, b.w));
         pq.offer(new Node(start, 0));
 
-        while(!pq.isEmpty()) {
+        while (!pq.isEmpty()) {
             Node cur = pq.poll();
             if (minDistanceXY[cur.to] < cur.w) continue;
 
-            for (Node e:adjList[cur.to]) {
+            for (Node e : adjList[cur.to]) {
                 if (minDistanceXY[e.to] <= minDistanceXY[cur.to] + e.w) continue;
-                minDistanceXY[e.to] = minDistanceXY[cur.to]+e.w;
+                minDistanceXY[e.to] = minDistanceXY[cur.to] + e.w;
                 pq.offer(new Node(e.to, minDistanceXY[e.to]));
             }
         }
@@ -90,13 +92,13 @@ public class Main_23801_두_단계_최단경로_2 {
         PriorityQueue<Node> pq = new PriorityQueue<>((a, b) -> Long.compare(a.w, b.w));
         pq.offer(new Node(start, 0));
 
-        while(!pq.isEmpty()) {
+        while (!pq.isEmpty()) {
             Node cur = pq.poll();
             if (minDistanceYZ[cur.to] < cur.w) continue;
 
-            for (Node e:adjList[cur.to]) {
+            for (Node e : adjList[cur.to]) {
                 if (minDistanceYZ[e.to] <= minDistanceYZ[cur.to] + e.w) continue;
-                minDistanceYZ[e.to] = minDistanceYZ[cur.to]+e.w;
+                minDistanceYZ[e.to] = minDistanceYZ[cur.to] + e.w;
                 pq.offer(new Node(e.to, minDistanceYZ[e.to]));
             }
         }
