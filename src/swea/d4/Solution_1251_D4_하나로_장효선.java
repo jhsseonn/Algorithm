@@ -1,17 +1,12 @@
-package com.ssafy.ws;
+package swea.d4;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Deque;
-import java.util.List;
-import java.util.PriorityQueue;
 import java.util.StringTokenizer;
 
-public class Solution_1251_응용_하나로_장효선 {
+public class Solution_1251_D4_하나로_장효선 {
 
 	static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 	static StringTokenizer st;
