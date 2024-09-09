@@ -1,5 +1,3 @@
-package BOJ.graph;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -47,6 +45,7 @@ public class Main_23801_두_단계_최단경로_2 {
             int end = Integer.parseInt(st.nextToken());
             int XY = getMinDistance(X, end);
             int YZ = getMinDistance(end, Z);
+            System.out.println(XY+" "+YZ);
             if (XY!=-1 && YZ!=-1) {
                 Y[i] = XY+YZ;
             } else {
@@ -66,7 +65,6 @@ public class Main_23801_두_단계_최단경로_2 {
 
     private static int getMinDistance(int start, int end) {
         int[] minDistance = new int[N+1];
-        boolean[] visited = new boolean[N+1];
         int INF = Integer.MAX_VALUE;
         Arrays.fill(minDistance, INF);
         minDistance[start] = 0;
