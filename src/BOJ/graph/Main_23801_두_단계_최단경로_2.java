@@ -14,10 +14,11 @@ public class Main_23801_두_단계_최단경로_2 {
     static StringTokenizer st;
     static int N, M, X, Z, P;
     static List<Node>[] adjList;
-    static int[] minDistanceXY;
-    static int[] minDistanceYZ;
-    static int INF = Integer.MAX_VALUE;
+    static long[] minDistanceXY;
+    static long[] minDistanceYZ;
+    static long INF = Long.MAX_VALUE;
     static boolean[] isP;
+    static boolean[] visited;
 
     public static void main(String[] args) throws IOException {
         st = new StringTokenizer(br.readLine());
@@ -25,12 +26,15 @@ public class Main_23801_두_단계_최단경로_2 {
         M = Integer.parseInt(st.nextToken());
         isP = new boolean[N+1];
         adjList = new ArrayList[N+1];
-        minDistanceXY = new int[N+1];
-        minDistanceYZ = new int[N+1];
-        int minDistance = INF;
+        minDistanceXY = new long[N+1];
+        minDistanceYZ = new long[N+1];
+        visited = new boolean[N+1];
+        long minDistance = INF;
 
         for (int i = 0; i < N+1; i++) {
             adjList[i] = new ArrayList<>();
+            minDistanceXY[i] = INF;
+            minDistanceYZ[i] = INF;
         }
 
         for (int i = 0; i < M; i++) {
@@ -50,16 +54,17 @@ public class Main_23801_두_단계_최단경로_2 {
 
         P = Integer.parseInt(br.readLine());
 
+        getMinDistanceXY(X);
+        Arrays.fill(visited, false);
+        getMinDistanceYZ(Z);
+
         st = new StringTokenizer(br.readLine());
         for (int i = 0; i < P; i++) {
-            isP[Integer.parseInt(st.nextToken())] = true;
-        }
-        getMinDistanceXY(X, Z);
-        getMinDistanceYZ(Z, X);
-
-        for (int i = 1; i < N+1; i++) {
-            if (isP[i] && minDistanceXY[i]!=INF && minDistanceYZ[i]!=INF && minDistance>minDistanceXY[i] + minDistanceYZ[i]) {
-                minDistance = minDistanceXY[i] + minDistanceYZ[i];
+            int p = Integer.parseInt(st.nextToken());
+            if (minDistanceXY[p]==INF || minDistanceYZ[p]==INF) continue;
+            long d = minDistanceXY[p] + minDistanceYZ[p];
+            if (minDistance>d) {
+                minDistance = d;
             }
         }
 
@@ -68,54 +73,59 @@ public class Main_23801_두_단계_최단경로_2 {
         System.out.println(minDistance);
     }
 
-    private static void getMinDistanceXY(int start, int end) {
-        Arrays.fill(minDistanceXY, INF);
+    private static void getMinDistanceXY(int start) {
         minDistanceXY[start] = 0;
-        boolean[] visited = new boolean[N+1];
-        visited[start] = true;
 
-        PriorityQueue<Node> pq = new PriorityQueue<>((a, b) -> a.w - b.w);
+        PriorityQueue<Node> pq = new PriorityQueue<>((a, b) -> {
+            if (a.w < b.w) return -1;
+            else if (a.w > b.w) return 1;
+            return 0;
+        });
         pq.offer(new Node(start, 0));
 
         while(!pq.isEmpty()) {
             Node cur = pq.poll();
+            if (visited[cur.to]) continue;
             if (minDistanceXY[cur.to] < cur.w) continue;
 
             for (Node e:adjList[cur.to]) {
+                if (visited[e.to]) continue;
                 if (minDistanceXY[e.to] < cur.w + e.w) continue;
                 minDistanceXY[e.to] = cur.w+e.w;
-                visited[e.to] = true;
                 pq.offer(new Node(e.to, minDistanceXY[e.to]));
             }
         }
     }
 
-    private static void getMinDistanceYZ(int start, int end) {
-        Arrays.fill(minDistanceYZ, INF);
+    private static void getMinDistanceYZ(int start) {
         minDistanceYZ[start] = 0;
-        boolean[] visited = new boolean[N+1];
-        visited[start] = true;
 
-        PriorityQueue<Node> pq = new PriorityQueue<>((a, b) -> a.w - b.w);
+        PriorityQueue<Node> pq = new PriorityQueue<>((a, b) -> {
+            if (a.w < b.w) return -1;
+            else if (a.w > b.w) return 1;
+            return 0;
+        });
         pq.offer(new Node(start, 0));
 
         while(!pq.isEmpty()) {
             Node cur = pq.poll();
+            if (visited[cur.to]) continue;
             if (minDistanceYZ[cur.to] < cur.w) continue;
 
             for (Node e:adjList[cur.to]) {
+                if (visited[e.to]) continue;
                 if (minDistanceYZ[e.to] < cur.w + e.w) continue;
                 minDistanceYZ[e.to] = cur.w+e.w;
-                visited[e.to] = true;
                 pq.offer(new Node(e.to, minDistanceYZ[e.to]));
             }
         }
     }
 
     private static class Node {
-        int to, w;
+        int to;
+        long w;
 
-        public Node(final int to, final int w) {
+        public Node(final int to, final long w) {
             this.to = to;
             this.w = w;
         }
