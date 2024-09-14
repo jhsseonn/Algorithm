@@ -20,19 +20,18 @@ public class Main_11053_S2_가장_긴_증가하는_부분_수열 {
             arr[i] = Integer.parseInt(st.nextToken());
         }
 
-        Arrays.sort(arr);
-
         int[] dp = new int[N];
-        dp[0] = arr[0];
+        Arrays.fill(dp, 1);
         for (int i = 1; i < N; i++) {
-            dp[i] = dp[i-1]+arr[i];
-        }
-        
-        int ans = 1;
-        for (int i = 1; i < N; i++) {
-            if (dp[i]!=dp[i-1]) ans+=1;
+            for (int j = 0; j < i; j++) {
+                if (arr[i]>arr[j]) {
+                    dp[i] = Math.max(dp[i], dp[j]+1);
+                }
+            }
         }
 
-        System.out.println(ans);
+        Arrays.sort(dp);
+
+        System.out.println(dp[N-1]);
     }
 }
