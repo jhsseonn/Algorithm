@@ -1,32 +1,29 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 import java.util.StringTokenizer;
 
 public class Main {
     static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     static StringTokenizer st;
-    static StringBuilder sb = new StringBuilder();
 
     public static void main(String[] args) throws IOException {
         int N = Integer.parseInt(br.readLine());
-        int INF = Integer.MAX_VALUE;
-        int[] matrix = new int[N+1];
+        int[] arr = new int[N+1];
         for (int i = 0; i < N; i++) {
             st = new StringTokenizer(br.readLine());
-            int r = Integer.parseInt(st.nextToken());
-            int c = Integer.parseInt(st.nextToken());
-            matrix[i] = r;
-            matrix[i+1] = c;
+            arr[i] = Integer.parseInt(st.nextToken());
+            arr[i+1] = Integer.parseInt(st.nextToken());
         }
 
         int[][] dp = new int[N][N];
-        for (int i = 2; i <=N ; i++) {
-            for (int j = 0; j <= N-i; j++) {
-                dp[j][j+i-1] = INF;
-                for (int k = j; k < j+i-1; k++) {
-                    int value = dp[j][k] + dp[k+1][j+i-1] + (matrix[j] * matrix[k+1] * matrix[j+i]);
-                    dp[j][j+i-1] = Math.min(dp[j][j+i-1], value);
+        for (int k = 2; k <= N; k++) {  // 행렬 개수
+            for (int i = 0; i+k <= N; i++) {  // 인덱스
+                dp[i][i+k-1] = Integer.MAX_VALUE;
+                for (int j = i; j < i+k-1; j++) {
+                    int value = dp[i][j]+dp[j+1][i+k-1]+(arr[i]*arr[j+1]*arr[i+k]);
+                    dp[i][i+k-1] = Math.min(dp[i][i+k-1], value);
                 }
             }
         }
