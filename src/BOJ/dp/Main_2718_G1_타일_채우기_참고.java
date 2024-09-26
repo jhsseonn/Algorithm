@@ -4,25 +4,21 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-public class Main_2718_타일_채우기 {
+public class Main_2718_G1_타일_채우기_참고 {
     static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     static StringBuilder sb = new StringBuilder();
     static int result, N;
-    static int[] arr;
     static int[] dp = new int[1001];
 
     public static void main(String[] args) throws IOException {
         int T = Integer.parseInt(br.readLine());
 
-        arr = new int[N+1];
+        for (int test_case = 1; test_case < T+1; test_case++) {
+            N = Integer.parseInt(br.readLine());
 
-        for (int i = 0; i < N; i++) {
-            arr[i] = Integer.parseInt(br.readLine());
+            sb.append(dp(N)).append("\n");
         }
-
-        for (int i = 0; i < N; i++) {
-            System.out.println(dp(arr[i]));
-        }
+        System.out.println(sb);
     }
 
     public static int dp(int x) {
@@ -34,10 +30,11 @@ public class Main_2718_타일_채우기 {
 
         result = dp(x-1)+4*dp(x-2);
 
-        for (int i = 3; i <= x; ++i) {
+        for (int i = 3; i <= x; i++) {
             if (i%2==0) {
                 result += 3*dp(x-i);
-            } else {
+            }
+            if (i%2!=0) {
                 result += 2*dp(x-i);
             }
         }
