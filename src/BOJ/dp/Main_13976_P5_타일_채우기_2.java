@@ -7,7 +7,7 @@ import java.io.InputStreamReader;
 /**
  * 14,196kb / 104ms
  */
-public class Main {
+public class Main_13976_P5_타일_채우기_2 {
     static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     static long N, MOD;
     static long[][] dp;
