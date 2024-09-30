@@ -3,7 +3,7 @@ package BOJ.dp;
 import java.io.*;
 import java.util.*;
 
-public class S3_9095_123더하기 {
+public class Main_9095_S3_123더하기 {
     static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     static StringTokenizer st;
     static int[] dp = new int[11];
