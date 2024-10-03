@@ -36,6 +36,7 @@ public class Solution {
                 st = new StringTokenizer(br.readLine());
                 int m = Integer.parseInt(st.nextToken());
                 int d = Integer.parseInt(st.nextToken());
+
                 move(m, d);
             }
 
@@ -53,12 +54,9 @@ public class Solution {
         int thirdR = getIndex(red[2]+2);
         int fourthL = getIndex(red[3]-2);
 
-        int start = m-1;
 
 
-
-        // 돌리는 자석이 0~3번째일 때
-        if (start==0) {
+        for (int i = 0; i < dirs.length; i++) {
             // 0번째, 1번째 비교
             if (magnet[0][firstR]!=magnet[1][secondL]) {
                 if (dir==1) red[0] = getIndex(red[0]-1);
