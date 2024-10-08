@@ -34,11 +34,3 @@ public class Main {
 
         System.out.println(dp[0][N-1]);
     }
-
-    private static void getMin(int i, int j) {
-        if (i==j) {
-
-        }
-    }
-}
-
