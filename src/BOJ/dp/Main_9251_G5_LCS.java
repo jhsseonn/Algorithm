@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 /**
- *
+ * 19,288kb / 132ms
  */
 public class Main_9251_G5_LCS {
     static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
