@@ -6,7 +6,7 @@ import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
 /**
- *
+ * 43,900kb / 384ms
  */
 public class Main_11404_G4_플로이드 {
     static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
