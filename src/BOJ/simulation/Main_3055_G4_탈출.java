@@ -7,7 +7,10 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.StringTokenizer;
 
-public class Main_3055_탈출 {
+/**
+ * 14,268kb / 100ms
+ */
+public class Main_3055_G4_탈출 {
     static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     static StringTokenizer st;
     static StringBuilder sb = new StringBuilder();
@@ -25,7 +28,6 @@ public class Main_3055_탈출 {
         arr = new char[R][C];
         res = new int[R][C];
         int[] start = new int[2];
-        int[] water = new int[2];
         waterDq = new ArrayDeque<>();
 
         for (int i = 0; i < R; i++) {
@@ -40,7 +42,7 @@ public class Main_3055_탈출 {
             }
         }
 
-        getFlood(water);
+        getFlood();
 
         int time = getMinTime(start);
 
@@ -54,7 +56,7 @@ public class Main_3055_탈출 {
         dq.offer(new Status(start[0], start[1], 0));
         visited[start[0]][start[1]] = true;
         int[][] ans = new int[R][C];
-        int endR = -1, endC=-1;
+        int endR = -1, endC = -1;
 
         while (!dq.isEmpty()) {
             Status cur = dq.poll();
@@ -69,27 +71,28 @@ public class Main_3055_탈출 {
                 // 범위 밖, 이미 방문한 경우, 돌이 있는 경우 지나갈 수 없음
                 if (nr < 0 || nr >= R || nc < 0 || nc >= C || visited[nr][nc] || arr[nr][nc] == 'X') continue;
 
-                if (res[nr][nc] <= depth+1 && res[nr][nc]!=0) continue; // 고슴도치가 지나가기 전 물이 지나간 경우 지나갈 수 없음
-                if (res[nr][nc]==0 && arr[nr][nc]=='*') continue;  // 물의 시작점은 지나갈 수 없다
-                if (arr[nr][nc]=='D') {
+                if (res[nr][nc] <= depth + 1 && res[nr][nc] != 0) continue; // 고슴도치가 지나가기 전 물이 지나간 경우 지나갈 수 없음
+                if (res[nr][nc] == 0 && arr[nr][nc] == '*') continue;  // 물의 시작점은 지나갈 수 없다
+                if (arr[nr][nc] == 'D') {
                     endR = nr;
                     endC = nc;
                 }
 
                 visited[nr][nc] = true;
-                ans[nr][nc] = depth+1;  // 최단경로 갱신
-                dq.offer(new Status(nr, nc, depth+1));
+                ans[nr][nc] = depth + 1;  // 최단경로 갱신
+                dq.offer(new Status(nr, nc, depth + 1));
             }
         }
 
-        if (endR==-1 && endC==-1) return -1;
+        if (endR == -1 && endC == -1) return -1;
         else return ans[endR][endC];
     }
 
-    private static void getFlood(int[] start) {
+    private static void getFlood() {
         boolean[][] visited = new boolean[R][C];
-        waterDq.offer(new Status(start[0], start[1], 0));
-        visited[start[0]][start[1]] = true;
+        for (Status s : waterDq) {
+            visited[s.r][s.c] = true;
+        }
 
         while (!waterDq.isEmpty()) {
             Status cur = waterDq.poll();
@@ -101,11 +104,11 @@ public class Main_3055_탈출 {
                 int nr = r + dr[i];
                 int nc = c + dc[i];
 
-                if (nr < 0 || nr >= R || nc < 0 || nc >= C || visited[nr][nc] || arr[nr][nc]=='X' || arr[nr][nc]=='D') continue;
+                if (nr < 0 || nr >= R || nc < 0 || nc >= C || visited[nr][nc] || arr[nr][nc] == 'X' || arr[nr][nc] == 'D') continue;
 
                 visited[nr][nc] = true;
-                res[nr][nc] = depth+1;
-                waterDq.offer(new Status(nr, nc, depth+1));
+                res[nr][nc] = depth + 1;
+                waterDq.offer(new Status(nr, nc, depth + 1));
             }
         }
     }
