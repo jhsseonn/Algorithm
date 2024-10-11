@@ -2,59 +2,54 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.List;
 
 public class Main {
-    static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-
     public static void main(String[] args) throws IOException {
-        String o = br.readLine();
-        String p = br.readLine();
-        List<Integer> res = kmp(o, p);
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        final long MOD = 1_000_000_009; // 32 bit 정수에 가까운 소수
+        final long base = 26;
 
-        System.out.println(res.size());
-        for (int ans : res) {
-            System.out.print(ans + " ");
+        char[] text, pattern;
+        text = br.readLine().toCharArray();
+        pattern = br.readLine().toCharArray();
+
+        if (text.length < pattern.length) {
+            System.out.println(0);
+            return;
         }
-    }
 
-    static int[] getPI(String pattern) {
-        int n = pattern.length();
-        int[] pi = new int[n];
-        int j = 0;
+        long pHash = 0, tHash = 0, power = 1;
+        ArrayList<Integer> list = new ArrayList<>(5);
 
-        for (int i = 1; i < n; i++) {
-            while (j > 0 && pattern.charAt(i) != pattern.charAt(j)) {
-                j = pi[j - 1];
-            }
-            if (pattern.charAt(i) == pattern.charAt(j)) {
-                pi[i] = ++j;
-            }
-        }
-        return pi;
-    }
+        int tlen = text.length, plen = pattern.length;
 
-    static List<Integer> kmp(String o, String p) {
-        int[] pi = getPI(p);
-        int j = 0;
-        int plen = p.length();
-        List<Integer> ans = new ArrayList<>();
+        for (int i = 0; i < plen; i++) {
+            pHash = (pHash * base) % MOD;
+            pHash = (pHash + pattern[i]) % MOD;
 
-        for (int i = 0, end = o.length(); i < end; i++) {
-            while (j > 0 && o.charAt(i) != p.charAt(j)) {
-                j = pi[j - 1];
-            }
-            if (o.charAt(i) == p.charAt(j)) {
-                if (j == plen - 1) {
-//                    System.out.println((i - plen + 1) + "째 인덱스에서 발견");
-                    ans.add(i - plen + 2);
-                    j = pi[j];
-                } else {
-                    j++;
-                }
+            tHash = (tHash * base) % MOD;
+            tHash = (tHash + text[i]) % MOD;
+
+            if (i < plen - 1) {
+                power = (power * base) % MOD;
             }
         }
 
-        return ans;
+        if (pHash == tHash) {
+            list.add(1);
+        }
+
+        for (int i = 1, end = tlen - plen; i <= end; i++) {
+            tHash = (((tHash - (text[i - 1] * power) % MOD + MOD) % MOD * base) % MOD + text[i + plen - 1]) % MOD;
+
+            if (pHash == tHash) {
+                list.add(i + 1);
+            }
+        }
+
+        System.out.println(list.size());
+        for (int idx : list) {
+            System.out.print(idx+" ");
+        }
     }
 }
