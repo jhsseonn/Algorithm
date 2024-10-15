@@ -1,4 +1,4 @@
-package com.ssafy.study;
+package BOJ.priorityQueue;
 
 import java.io.BufferedReader;
 import java.io.IOException;
