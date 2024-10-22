@@ -19,7 +19,12 @@ public class Main {
             arr[i] = new Pos(dist, time);
         }
 
-        int time = arr[N - 1].dist;
+        int time;
+        if (arr[N-1].dist>=arr[N-1].time) {
+            time = arr[N - 1].dist;
+        } else {
+            time = arr[N-1].time;
+        }
         int dist = arr[N - 1].dist;
         int idx = N - 2;
         while (dist > 0) {
@@ -32,7 +37,6 @@ public class Main {
                 idx--;
             }
         }
-
 
         System.out.println(time);
     }
