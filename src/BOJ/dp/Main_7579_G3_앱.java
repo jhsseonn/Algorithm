@@ -19,7 +19,6 @@ public class Main_7579_G3_앱 {
         M = Integer.parseInt(st.nextToken());
         apps = new int[N][2];
 
-
         int sum = 0;
         st = new StringTokenizer(br.readLine());
         for (int i = 0; i < N; i++) {
