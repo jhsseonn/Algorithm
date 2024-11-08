@@ -10,7 +10,7 @@ import java.util.StringTokenizer;
 /**
  * 428,740kb / 2,152ms
  */
-public class Main_2533_사회망서비스 {
+public class Main_2533_G3_사회망서비스 {
     static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     static StringTokenizer st;
     static List<Integer>[] adjList;
