@@ -1,9 +1,9 @@
-package BOJ;
+package BOJ.exhaustiveSearch;
 
 import java.util.*;
 import java.io.*;
 
-public class MazeSearch {
+public class 미로찾기 {
 
     static int[][] dest;
 

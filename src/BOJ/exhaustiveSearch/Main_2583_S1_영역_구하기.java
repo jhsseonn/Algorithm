@@ -1,4 +1,4 @@
-package BOJ.dfsbfs;
+package BOJ.exhaustiveSearch;
 
 import java.io.BufferedReader;
 import java.io.IOException;

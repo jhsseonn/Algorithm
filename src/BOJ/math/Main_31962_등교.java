@@ -1,4 +1,4 @@
-package BOJ.codingTest;
+package BOJ.math;
 
 import java.io.BufferedReader;
 import java.io.IOException;
