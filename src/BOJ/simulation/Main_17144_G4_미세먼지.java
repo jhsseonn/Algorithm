@@ -8,7 +8,7 @@ import java.util.StringTokenizer;
 /**
  * 39,200kb / 336ms
  */
-public class Main_17144_미세먼지 {
+public class Main_17144_G4_미세먼지 {
     static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     static StringTokenizer st;
     static int R, C;
