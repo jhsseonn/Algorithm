@@ -42,7 +42,7 @@ public class Dijkstra_init {
             if (minDistance[cur.n] < cur.price) continue;
 
             for(Node now: adjList[cur.n]) {
-                if (minDistance[now.n] <= minDistance[now.n] + now.price) continue;
+                if (minDistance[now.n] <= minDistance[cur.n] + now.price) continue;
                 minDistance[now.n] = minDistance[cur.n]+now.price;
                 pq.offer(new Node(now.n, minDistance[now.n]));
             }
