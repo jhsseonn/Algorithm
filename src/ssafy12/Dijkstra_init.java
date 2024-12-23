@@ -1,4 +1,4 @@
-package BOJ;
+package ssafy12;
 
 import java.util.ArrayList;
 import java.util.Arrays;
