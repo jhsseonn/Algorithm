@@ -1,4 +1,4 @@
-package BOJ.binarySearch;
+package BOJ.lis;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;

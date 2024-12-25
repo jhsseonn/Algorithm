@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
-public class Main_2342_G3_Dance_Dance_Revolution {
+public class Main_2342_G3_Dance_Dance_Revolution_풀이중 {
     static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     static StringTokenizer st;
 
